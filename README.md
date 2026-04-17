@@ -42,7 +42,7 @@
 
 <div id="container">
   <!-- IMAGE DU PLAN -->
-  <img src="Capture d'écran(18)" alt="Plan des quais">
+  <img src="https://Capture%20d'%C3%A9cran(18)" alt="Plan des quais">
 
   <!-- BOUTONS AU-DESSUS DU PLAN -->
   <div class="dock red" data-id="Q01" style="top:420px; left:180px;">01</div>
