@@ -41,11 +41,15 @@
 <body>
 
 <div id="container">
-  <!-- EXEMPLES DE QUAIS -->
-  <div class="dock red" data-id="Q01" style="top:100px; left:200px;">Q01</div>
-  <div class="dock red" data-id="Q02" style="top:150px; left:200px;">Q02</div>
-  <div class="dock red" data-id="Q03" style="top:200px; left:200px;">Q03</div>
+  <!-- IMAGE DU PLAN -->
+  <img src="Capture d'écran(18)" alt="Plan des quais">
+
+  <!-- BOUTONS AU-DESSUS DU PLAN -->
+  <div class="dock red" data-id="Q01" style="top:420px; left:180px;">01</div>
+  <div class="dock red" data-id="Q02" style="top:420px; left:260px;">02</div>
+  <div class="dock red" data-id="Q03" style="top:420px; left:340px;">03</div>
 </div>
+
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
