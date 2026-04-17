@@ -2,55 +2,94 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Plan des quais</title>
+  <title>Plan des quais – numérotation inversée</title>
+
+  <style>
+    body {
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:#f4f4f4;
+    }
+
+    #container {
+      position:relative;
+      width:1200px;
+      margin:auto;
+      margin-top:40px;
+    }
+
+    .dock {
+      position:absolute;
+      width:90px;
+      height:36px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+      user-select:none;
+      box-shadow:0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .red { background:#c0392b; }
+    .green { background:#27ae60; }
+  </style>
 </head>
+
 <body>
-  <h1>Bienvenue</h1>
-  <p>Voici mon site en ligne.</p>
 
-  <a href="https://www.google.com" target="_blank">
-    Lien de test
-  </a>
-  
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<div id="container">
+  <!-- EXEMPLES DE QUAIS -->
+  <div class="dock red" data-id="Q01" style="top:100px; left:200px;">Q01</div>
+  <div class="dock red" data-id="Q02" style="top:150px; left:200px;">Q02</div>
+  <div class="dock red" data-id="Q03" style="top:200px; left:200px;">Q03</div>
+</div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBpKGxGcC6IHvNTu9bpTwi_4jZIAF5olg",
-  authDomain: "projet-plan-dynamique-pour-ma.firebaseapp.com",
-  projectId: "projet-plan-dynamique-pour-ma",
-  storageBucket: "projet-plan-dynamique-pour-ma.appspot.com",
-  messagingSenderId: "1008307493478",
-  appId: "1:1008307493478:web:e7fcc54f4bba624da26ba7"
-};
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyBpKGxGcC6IHvNTu9bpTwi_4jZIAF5olg",
+    authDomain: "projet-plan-dynamique-pour-ma.firebaseapp.com",
+    projectId: "projet-plan-dynamique-pour-ma",
+    storageBucket: "projet-plan-dynamique-pour-ma.appspot.com",
+    messagingSenderId: "1008307493478",
+    appId: "1:1008307493478:web:e7fcc54f4bba624da26ba7"
+  };
 
-const ref = doc(db, "cases", "case1");
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-// clic = changement partagé
-window.toggleCase = async () => {
-  const snap = await getDoc(ref);
-  const active = snap.exists() && snap.data().active;
-  await setDoc(ref, { active: !active });
-};
+  // 🔁 Synchronisation temps réel des quais
+  document.querySelectorAll(".dock").forEach(dock => {
+    const id = dock.dataset.id;
+    const ref = doc(db, "quais", id);
 
-// mise à jour pour tous
-onSnapshot(ref, snap => {
-  const el = document.getElementById("case1");
-  if (!el) return;
-  el.style.background =
-    snap.exists() && snap.data().active ? "green" : "white";
-});
+    // ✅ clic → écriture Firestore
+    dock.addEventListener("click", async () => {
+      await setDoc(ref, { etat: "green" }, { merge: true });
+    });
+
+    // ✅ TEMPS RÉEL → lecture Firestore
+    onSnapshot(ref, snap => {
+      dock.classList.remove("red", "green");
+      if (snap.exists()) {
+        dock.classList.add(snap.data().etat);
+      } else {
+        dock.classList.add("red");
+      }
+    });
+  });
 </script>
+
 </body>
 </html>
 ``
