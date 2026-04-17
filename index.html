@@ -28,7 +28,7 @@
   .box { width:20px; height:20px; margin-right:6px }
 </style>
 </head>
-  <script type="module">
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {
   getFirestore,
@@ -50,25 +50,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔲 EXEMPLE DE CASE PARTAGÉE
 const ref = doc(db, "cases", "case1");
 
-// clic = modification pour tout le monde
+// clic = changement partagé
 window.toggleCase = async () => {
   const snap = await getDoc(ref);
   const active = snap.exists() && snap.data().active;
   await setDoc(ref, { active: !active });
 };
 
-// mise à jour temps réel
+// mise à jour pour tous
 onSnapshot(ref, snap => {
   const el = document.getElementById("case1");
   if (!el) return;
-  el.style.background = snap.exists() && snap.data().active
-    ? "green"
-    : "white";
+  el.style.background =
+    snap.exists() && snap.data().active ? "green" : "white";
 });
 </script>
+  
 <body>
 
 <div id="container">
